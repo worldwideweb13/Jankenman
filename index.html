@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ジャンケン</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="js/main.js"></script>    
+</head>
+<body>
+    <div class="Parts">
+<!-- HEADERロゴ -->
+        <div class="Head">
+            <img id="TitleRogo" src="./img/Rogo01.png" alt="">
+            <img id="TitleIcon"src="./img/Rogo02.png" alt="">
+        </div>
+<!-- ジャンケンアイコン -->
+        <div class="ComMain">
+            <div id="message"></div>
+            <div id="ComHand">
+                <!-- <img id="ComPic01" src="./img/hand0.png" alt="">
+                <img id="ComPic02" src="./img/hand1.png" alt="">
+                <img id="ComPic03" src="./img/hand2.png" alt=""> -->
+            </div>
+        </div>
+        <div class="UserMain">
+            <div class="wrap">
+                <button class="button" onclick="StartPlay(); GameStart()" value="スタート">ゲームスタート</button>
+            </div>
+            <div class="UserHandsBox">
+                <img src="./img/Rule01.png" alt="">
+                <div id="MyHand">
+                    <input class="UserHands" id="gu" type="image" src="img/gu.png" alt="グー" onclick="GetHand(0); PonPlay()" value="グー" disabled>
+                    <input class="UserHands" id="choki" type="image" src="img/choki.png" alt="チョキ" onclick="GetHand(1); PonPlay()" value="チョキ" disabled>
+                    <input class="UserHands" id="pa" type="image" src="img/pa.png" alt="パー" onclick="GetHand(2); PonPlay()" value="パー" disabled>
+                </div>
+                <img src="./img/Rule02.png" alt="">
+            </div>
+        </div>
+    </div>
+    <script>
+        var hand = new Array("img/hand0.png","img/hand1.png","img/hand2.png");
+        var msg = new Array("ボタンを押してね", "FiverPlay","ZukoPlay","AikoPlay");
+         //効果音再生       
+        var audio = new Audio();
+        var playlist = [
+            "./music/start.mp3",
+            "./music/pon.mp3",
+            "./music/sho.mp3",
+            "./music/zuko.mp3",
+            "./music/aiko.mp3",
+            "./music/fiver.mp3"
+        ]
+         //「ジャンケン」再生       
+        function StartPlay() {
+            audio.src = playlist[0];
+            audio.play();
+                }
+         //「ポン」再生       
+         function PonPlay() {
+            audio.src = playlist[1];
+            audio.play();
+                }
+         //「ショ」再生       
+         function ShoPlay() {
+            audio.src = playlist[2];
+            audio.play();
+                }                
+         //「ズコ」再生       
+         function ZukoPlay() {
+            audio.src = playlist[3];
+            audio.play();
+                }
+         //「アイコ」再生       
+         function AikoPlay() {
+            audio.src = playlist[4];
+            audio.play();
+                }
+         //「フィーバー」再生       
+         function FiverPlay() {
+            audio.src = playlist[5];
+            audio.play();
+                }
+
+        //スロット
+        timer = 0;
+        count = 0;
+
+        //ユーザーのジャンケンアイコン選択後アクション
+        function GetHand(btn) {
+            // タイマーを止める
+            clearTimeout(timer);
+            //COMの出す手を決める
+            r = Math.floor(Math.random() * 3);
+            document.getElementById("ComHand").innerHTML = "<img src='" + hand[r] + "'>";
+            //ジャンケン終了後ボタンを使えなくする
+            document.getElementById("gu").disabled = true;
+            document.getElementById("choki").disabled = true;
+            document.getElementById("pa").disabled = true;
+
+
+            //ジャンケンの内部ロジック
+            //あいこ
+            if (btn == r){
+                setTimeout("AikoPlay(); GameStart()",1500);
+            }
+            //グー
+            if(btn == 0 && r == 1){
+                setTimeout("FiverPlay()",1000);
+            }else if (btn == 0 && r == 2) {
+                setTimeout("ZukoPlay()",1000);
+            };
+            //チョキ
+            if(btn == 1 && r == 0){
+                setTimeout("ZukoPlay()",1000);
+            }else if(btn == 1 && r == 2){
+                setTimeout("FiverPlay()",1000);
+            };
+            //パー
+            if(btn == 2 && r == 0){
+                setTimeout("FiverPlay()",1000);
+            } else if (btn == 2 && r == 1){
+                setTimeout("ZukoPlay()",1000);
+            };
+            // numを入れて値返却
+            // document.getElementById("message").innerHTML = msg[num];
+        }
+
+        function GameStart(){
+            //ボタンの有効化
+            document.getElementById("gu").disabled = false;
+            document.getElementById("choki").disabled = false;
+            document.getElementById("pa").disabled = false;
+            //リセットボタンを使えなくする
+            // document.getElementById["start"].disabled = true;
+            GetCountHand();
+            }
+
+        function GetCountHand() {
+            //手を順番に表示
+            document.getElementById("ComHand").innerHTML = "<img src='" + hand[count] + "'>"; 
+            count++;
+            if (count > 2) count = 0;
+            timer = setTimeout("GetCountHand()",500);
+        }
+
+    </script>
+</body>
+</html>
